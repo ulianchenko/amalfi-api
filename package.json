@@ -7,7 +7,7 @@
     "node": "18.15.0"
   },
   "scripts": {
-    "start": "npm run build && node build/src/index.js",
+    "start": "rimraf ./build && tsc && node build/src/index.js",
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc",
     "lint": "eslint src/**/*.ts",

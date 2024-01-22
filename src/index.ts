@@ -52,23 +52,23 @@ app.post('/create-checkout-session', async (req: Request, res: Response): Promis
     mode: 'payment',
     // return_url: `${DOMAIN_NAME}/return?session_id={CHECKOUT_SESSION_ID}`,
     // success_url: `${DOMAIN_NAME}?success=true`,
-    success_url: `${DOMAIN_NAME}/return`,
-    cancel_url: `${DOMAIN_NAME}?canceled=true`,
+    success_url: `${DOMAIN_NAME}/return?success=true`,
+    cancel_url: `${DOMAIN_NAME}/return?canceled=true`,
   });
 
   // res.send({clientSecret: session.client_secret});
   res.redirect(303, String(session.url));
 });
 
-app.get('/session-status', async (req: Request, res: Response): Promise<void> => {
-  const sessionId = String(req.query.session_id);
-  const session = await stripeObj.checkout.sessions.retrieve(sessionId);
+// app.get('/session-status', async (req: Request, res: Response): Promise<void> => {
+//   const sessionId = String(req.query.session_id);
+//   const session = await stripeObj.checkout.sessions.retrieve(sessionId);
 
-  res.send({
-    status: session.status,
-    customer_email: session?.customer_details?.email
-  });
-});
+//   res.send({
+//     status: session.status,
+//     customer_email: session?.customer_details?.email
+//   });
+// });
 
 // Middleware for handling 404 error
 app.use((req: Request, res: Response): void => {
