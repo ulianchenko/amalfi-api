@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import axios from 'axios';
 import cors from 'cors';
 import config from 'config';
 import dotenv from 'dotenv';
@@ -39,6 +40,7 @@ app.use('/api', routes);
 //   res.send('Hello World!');
 // });
 
+// Stripe payment routes
 app.post('/create-checkout-session', async (req: Request, res: Response): Promise<void> => {
   const session = await stripeObj.checkout.sessions.create({
     // ui_mode: 'embedded',
@@ -69,6 +71,29 @@ app.post('/create-checkout-session', async (req: Request, res: Response): Promis
 //     customer_email: session?.customer_details?.email
 //   });
 // });
+
+
+// Moneris payment routes
+app.post('/moneris-ticket', async (req: Request, res: Response): Promise<void> => {
+  axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
+  .then(response => {
+    res.status(201).json(response.data.response.ticket);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+});
+
+app.post('/moneris-receipt', async (req: Request, res: Response): Promise<void> => {
+  axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
+  .then(response => {
+    res.status(201).json(response.data.response);
+  })
+  .catch(error => {
+    console.log(error);
+  });
+});
+
 
 // Middleware for handling 404 error
 app.use((req: Request, res: Response): void => {
