@@ -20,7 +20,8 @@ const PORT = process.env.PORT || config.get('port') || 8080;
 // const PORT: number = 8080;
 const stripeObj = new Stripe('sk_test_51OWkH4GKmalhlFM413SZO0W54WMJKhMYB1lRE7eNRyzHFsR3SriI1rGRVwVhLRcvnKF2A9KSHABfL0fHIvR7zjXc00ii850ogO');
 // const DOMAIN_NAME = 'http://localhost:3000';
-const DOMAIN_NAME = 'https://amalfi.vercel.app';
+// const DOMAIN_NAME = 'https://amalfi.vercel.app';
+const DOMAIN_NAME = 'https://amalfi.onrender.com';
 
 initDatabase();
 
@@ -41,7 +42,7 @@ app.use('/api', routes);
 // });
 
 // Stripe payment routes
-app.post('/create-checkout-session', async (req: Request, res: Response): Promise<void> => {
+app.post('/api/create-checkout-session', async (req: Request, res: Response): Promise<void> => {
   const session = await stripeObj.checkout.sessions.create({
     // ui_mode: 'embedded',
     line_items: [
@@ -74,7 +75,7 @@ app.post('/create-checkout-session', async (req: Request, res: Response): Promis
 
 
 // Moneris payment routes
-app.post('/moneris-ticket', async (req: Request, res: Response): Promise<void> => {
+app.post('/api/moneris-ticket', async (req: Request, res: Response): Promise<void> => {
   axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
   .then(response => {
     res.status(201).json(response.data.response.ticket);
@@ -84,7 +85,7 @@ app.post('/moneris-ticket', async (req: Request, res: Response): Promise<void> =
   });
 });
 
-app.post('/moneris-receipt', async (req: Request, res: Response): Promise<void> => {
+app.post('/api/moneris-receipt', async (req: Request, res: Response): Promise<void> => {
   axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
   .then(response => {
     res.status(201).json(response.data.response);
