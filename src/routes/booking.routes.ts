@@ -20,16 +20,19 @@ router.get('/', async (req: Request, res: Response): Promise<void> => {
 });
 
 
-router.post('/', auth, async (req: Request, res: Response): Promise<void> => {
+// router.post('/', auth, async (req: Request, res: Response): Promise<void> => {
+router.post('/', async (req: Request, res: Response): Promise<void> => {
   try {
     const canBooking: boolean = await checkCanBooking(req.body);
+    console.log('booking POST req.body: ', req.body);
     if (canBooking) {
       const newBooking: IBooking = await Booking.create({
         ...req.body,
-        userId: req.body.user._id,
+        // userId: req.body.user?._id || null,
+        userId: req.body.userId,
         expires_at: req.body.departureDate - req.body.arrivalDate,
       });
-
+      console.log('booking POST newBooking: ', newBooking);
       res.status(201).send(newBooking);
       // res.status(201).json(newBooking);
     } else {
@@ -41,6 +44,7 @@ router.post('/', auth, async (req: Request, res: Response): Promise<void> => {
       });
     }
   } catch (error) {
+    console.log('booking POST error: ', error);
     res.status(500).json({
       message: 'An error has occurred on the server. Please, try again later',
     });
@@ -55,10 +59,12 @@ router.post('/', auth, async (req: Request, res: Response): Promise<void> => {
 // router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<Response<any, Record<string, any>> | void> => {
 router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log('req.body.user._id: ', req.body.user._id);
     const { bookingId } = req.params;
+    console.log('bookingId: ', bookingId);
     const removedBooking: IBooking | null = await Booking.findById(bookingId);
     const isAdmin = req.body.userRole === 'admin';
-    const currentUser = removedBooking?.userId.toString() === req.body.user._id;
+    const currentUser = removedBooking?.userId?.toString() === req.body.user?._id;
 
     if (currentUser || isAdmin) {
       // await removedBooking?.remove();
@@ -74,6 +80,7 @@ router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<
       });
     }
   } catch (error) {
+    console.log('booking DELETE error: ', error);
     res.status(500).json({
       message: 'An error has occurred on the server. Please, try again later',
     });

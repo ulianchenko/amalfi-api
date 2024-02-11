@@ -8,7 +8,7 @@ export interface IBooking extends Document {
   arrivalDate: Date;
   departureDate: Date;
   roomId: Types.ObjectId;
-  userId: Types.ObjectId;
+  userId: String;
   totalPrice: number;
   expires_at?: number;
 }
@@ -20,7 +20,7 @@ const bookingSchema: Schema = new Schema<IBooking>({
   arrivalDate: Date,
   departureDate: Date,
   roomId: { type: Schema.Types.ObjectId, ref: 'Room', required : true },
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required : true },
+  userId: String,
   totalPrice: { type: Number, required: true },
   expires_at: Number
 });

@@ -5,9 +5,9 @@ import tokenService from '../services/token.service';
 
 
 const auth =  async ( req: Request, res: Response, next: NextFunction): Promise<void | Response<any, Record<string, any>>> => {
-  // if (req.method === 'OPTIONS') {
-  //   next();
-  // }
+  if (req.method === 'OPTIONS') {
+    next();
+  }
 
   try {
     const token: string = req.headers.authorization?.split(' ')[1] || '';

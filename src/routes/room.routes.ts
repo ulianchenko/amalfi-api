@@ -40,7 +40,8 @@ router.get('/:roomId', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-router.post('/:roomId', auth, async (req: Request, res: Response): Promise<void> => {
+// router.post('/:roomId', auth, async (req: Request, res: Response): Promise<void> => {
+router.post('/:roomId', async (req: Request, res: Response): Promise<void> => {
   try {
     const { roomId } = req.params;
     const room: IRoom | null = await Room.findById(roomId);
