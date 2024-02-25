@@ -5,6 +5,7 @@ import bookingRoutes from './booking.routes';
 import roomRoutes from './room.routes';
 import userRoutes from './user.routes';
 import likeRoutes from './like.routes';
+import paymentRoutes from './payment.routes';
 
 const router = express.Router({ mergeParams: true });
 
@@ -14,5 +15,6 @@ router.use('/booking', bookingRoutes);
 router.use('/rooms', roomRoutes);
 router.use('/user', userRoutes);
 router.use('/like', likeRoutes);
+router.use('/payment', paymentRoutes);
 
 export default router;

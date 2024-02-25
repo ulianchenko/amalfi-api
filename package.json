@@ -13,7 +13,7 @@
     "lint": "eslint src/**/*.ts",
     "test": "jest --forceExit --detectOpenHandles --watch --runInBand",
     "test:coverage": "jest --forceExit --detectOpenHandles --coverage --runInBand",
-    "proxy": "<https://amalfi-api.onrender.com>"
+    "proxy": "<http://localhost:8080>"
   },
   "license": "ISC",
   "author": "Serhii Ulianchenko <ulianchenko@gmail.com>",

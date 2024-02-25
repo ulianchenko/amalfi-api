@@ -6,9 +6,10 @@ import Room from '../models/Room';
 
 const initDatabase = (): void => {
   // Connect to MongoDB
-  mongoose.connect(
-    'mongodb+srv://ulianchenko:a1b2c3d4e5@cluster0.nzybwy4.mongodb.net/dbAmalfi?retryWrites=true&w=majority'
-  );
+  // mongoose.connect(
+  //   'mongodb+srv://ulianchenko:a1b2c3d4e5@cluster0.nzybwy4.mongodb.net/dbAmalfi?retryWrites=true&w=majority'
+  // );
+  mongoose.connect(process.env.MONGO_URI as string);
 
   const db: mongoose.Connection = mongoose.connection;
   db.on('error', console.error.bind(console, 'Connection error'));

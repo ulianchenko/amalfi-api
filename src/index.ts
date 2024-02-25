@@ -1,9 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express';
-import axios from 'axios';
+// import axios from 'axios';
 import cors from 'cors';
 import config from 'config';
 import dotenv from 'dotenv';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 // import  mongoose, { Document, Model, Schema, model } from 'mongoose';
 
 // import swaggerUi from 'swagger-ui-express';
@@ -16,10 +16,10 @@ import routes from './routes'
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT || config.get('port') || 8080;
+const PORT = config.get('PORT') || 8080;
 // const PORT: number = 8080;
-const stripeObj = new Stripe('sk_test_51OWkH4GKmalhlFM413SZO0W54WMJKhMYB1lRE7eNRyzHFsR3SriI1rGRVwVhLRcvnKF2A9KSHABfL0fHIvR7zjXc00ii850ogO');
-const DOMAIN_NAME = 'http://localhost:3000';
+// const stripeObj = new Stripe('sk_test_51OWkH4GKmalhlFM413SZO0W54WMJKhMYB1lRE7eNRyzHFsR3SriI1rGRVwVhLRcvnKF2A9KSHABfL0fHIvR7zjXc00ii850ogO');
+// const DOMAIN_NAME = 'http://localhost:3000';
 // const DOMAIN_NAME = 'https://amalfi.vercel.app';
 // const DOMAIN_NAME = 'https://amalfi.onrender.com';
 
@@ -42,26 +42,26 @@ app.use('/api', routes);
 // });
 
 // Stripe payment routes
-app.post('/api/create-checkout-session', async (req: Request, res: Response): Promise<void> => {
-  const session = await stripeObj.checkout.sessions.create({
-    // ui_mode: 'embedded',
-    line_items: [
-      {
-        // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-        price: 'price_1OX4MIGKmalhlFM45nyYlosE',
-        quantity: 1,
-      },
-    ],
-    mode: 'payment',
-    // return_url: `${DOMAIN_NAME}/return?session_id={CHECKOUT_SESSION_ID}`,
-    // success_url: `${DOMAIN_NAME}?success=true`,
-    success_url: `${DOMAIN_NAME}/return?success=true`,
-    cancel_url: `${DOMAIN_NAME}/return?canceled=true`,
-  });
+// app.post('/api/create-checkout-session', async (req: Request, res: Response): Promise<void> => {
+//   const session = await stripeObj.checkout.sessions.create({
+//     // ui_mode: 'embedded',
+//     line_items: [
+//       {
+//         // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+//         price: 'price_1OX4MIGKmalhlFM45nyYlosE',
+//         quantity: 1,
+//       },
+//     ],
+//     mode: 'payment',
+//     // return_url: `${DOMAIN_NAME}/return?session_id={CHECKOUT_SESSION_ID}`,
+//     // success_url: `${DOMAIN_NAME}?success=true`,
+//     success_url: `${DOMAIN_NAME}/return?success=true`,
+//     cancel_url: `${DOMAIN_NAME}/return?canceled=true`,
+//   });
 
-  // res.send({clientSecret: session.client_secret});
-  res.redirect(303, String(session.url));
-});
+//   // res.send({clientSecret: session.client_secret});
+//   res.redirect(303, String(session.url));
+// });
 
 // app.get('/session-status', async (req: Request, res: Response): Promise<void> => {
 //   const sessionId = String(req.query.session_id);
@@ -75,25 +75,25 @@ app.post('/api/create-checkout-session', async (req: Request, res: Response): Pr
 
 
 // Moneris payment routes
-app.post('/api/moneris-ticket', async (req: Request, res: Response): Promise<void> => {
-  axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
-  .then(response => {
-    res.status(201).json(response.data.response.ticket);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-});
+// app.post('/api/moneris-ticket', async (req: Request, res: Response): Promise<void> => {
+//   axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
+//   .then(response => {
+//     res.status(201).json(response.data.response.ticket);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+// });
 
-app.post('/api/moneris-receipt', async (req: Request, res: Response): Promise<void> => {
-  axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
-  .then(response => {
-    res.status(201).json(response.data.response);
-  })
-  .catch(error => {
-    console.log(error);
-  });
-});
+// app.post('/api/moneris-receipt', async (req: Request, res: Response): Promise<void> => {
+//   axios.post('https://gatewayt.moneris.com/chkt/request/request.php', req.body)
+//   .then(response => {
+//     res.status(201).json(response.data.response);
+//   })
+//   .catch(error => {
+//     console.log(error);
+//   });
+// });
 
 
 // Middleware for handling 404 error
