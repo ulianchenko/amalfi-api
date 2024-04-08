@@ -55,30 +55,42 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<Response<any, Record<string, any>> | void> => {
-// router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<Response<any, Record<string, any>> | void> => {
-router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<void> => {
-  try {
-    console.log('req.body.user._id: ', req.body.user._id);
-    const { bookingId } = req.params;
-    console.log('bookingId: ', bookingId);
-    const removedBooking: IBooking | null = await Booking.findById(bookingId);
-    const isAdmin = req.body.userRole === 'admin';
-    const currentUser = removedBooking?.userId?.toString() === req.body.user?._id;
+// router.delete('/:bookingId', auth, async (req: Request, res: Response): Promise<void> => {
+//   try {
+//     console.log('req.body.user._id: ', req.body.user._id);
+//     const { bookingId } = req.params;
+//     console.log('bookingId: ', bookingId);
+//     const removedBooking: IBooking | null = await Booking.findById(bookingId);
+//     const isAdmin = req.body.userRole === 'admin';
+//     const currentUser = removedBooking?.userId?.toString() === req.body.user?._id;
 
-    if (currentUser || isAdmin) {
-      // await removedBooking?.remove();
-      await removedBooking?.deleteOne();
-      // return res.send(null);
-      // return res.send(removedBooking);
-      res.send(removedBooking);
-      return;
-      // return res.json(removedBooking);
-    } else {
-      res.status(401).json({
-        message: 'Unauthorized',
-      });
-    }
+//     if (currentUser || isAdmin) {
+//       // await removedBooking?.remove();
+//       await removedBooking?.deleteOne();
+//       // return res.send(null);
+//       // return res.send(removedBooking);
+//       res.send(removedBooking);
+//       return;
+//       // return res.json(removedBooking);
+//     } else {
+//       res.status(401).json({
+//         message: 'Unauthorized',
+//       });
+//     }
+//   } catch (error) {
+//     console.log('booking DELETE error: ', error);
+//     res.status(500).json({
+//       message: 'An error has occurred on the server. Please, try again later',
+//     });
+//   }
+// });
+router.delete('/:bookingId', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { bookingId } = req.params;
+    const removedBooking: IBooking | null = await Booking.findById(bookingId);
+
+    await removedBooking?.deleteOne();
+    res.send(removedBooking);
   } catch (error) {
     console.log('booking DELETE error: ', error);
     res.status(500).json({
