@@ -220,7 +220,7 @@ app.post('/api/quickbookswebhook', (req, res) => {
 
   // if payload is empty, don't do anything
   if (!webhookPayload) {
-    console.log('SUCCESS, quickbooks webhook is OK');
+    console.log('Quickbooks webhook is empty');
     return res.status(200).send('success');
   }
 
@@ -228,6 +228,8 @@ app.post('/api/quickbookswebhook', (req, res) => {
    * Validates the payload with the intuit-signature hash
    */
   const hash = crypto.createHmac('sha256', config.get('WEBHOOKSVERIFIER')).update(webhookPayload).digest('base64');
+  console.log('signature:', signature);
+  console.log('hash:', hash);
   if (signature === hash) {
       console.log("The Webhook notification payload is :" + webhookPayload);
       return res.status(200).send('SUCCESS');
