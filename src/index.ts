@@ -206,7 +206,7 @@ app.get('/api/getCompanyInfo', function (req, res) {
 app.post('/api/quickbookswebhook', (req, res) => {
 
   const webhooksVerifier = 'cb5458d7-18fb-4e0a-9510-9aaa2692f414';
-  console.log('quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook:', req);
+  // console.log('quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook:', req);
   const webhookPayload = JSON.stringify(req.body);
   console.log('The paylopad is :' + JSON.stringify(req.body));
   const signature = req.get('intuit-signature');
@@ -227,7 +227,8 @@ app.post('/api/quickbookswebhook', (req, res) => {
   /**
    * Validates the payload with the intuit-signature hash
    */
-  const hash = crypto.createHmac('sha256', config.get('WEBHOOKSVERIFIER')).update(webhookPayload).digest('base64');
+  // const hash = crypto.createHmac('sha256', config.get('WEBHOOKSVERIFIER')).update(webhookPayload).digest('base64');
+  const hash = crypto.createHmac('sha256', webhooksVerifier).update(webhookPayload).digest('base64');
   console.log('signature:', signature);
   console.log('hash:', hash);
   if (signature === hash) {
