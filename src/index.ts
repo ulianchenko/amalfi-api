@@ -113,7 +113,7 @@ app.get('/api/quickbooks', (req: Request, res: Response): void => {
     clientSecret: 'mgkPADZz5LGpPgNiiq0VCyKFu5Hnw2xi2m5y70hu',
     environment: 'sandbox',
     // redirectUri: 'http://localhost:3000/quickbooksredirect',
-    redirectUri: 'https://amalfi.onrender.com/quickbooksredirect',
+    redirectUri: 'https://amalfi-api.onrender.com/api/quickbooksredirect',
   });
   const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'testState'});
 
