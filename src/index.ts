@@ -5,6 +5,7 @@ import OAuthClient from 'intuit-oauth';
 import cors from 'cors';
 import config from 'config';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 // import Stripe from 'stripe';
 // import  mongoose, { Document, Model, Schema, model } from 'mongoose';
 
@@ -202,8 +203,36 @@ app.get('/api/getCompanyInfo', function (req, res) {
     });
 });
 
-app.get('/api/quickbookswebhook', (req: Request, res: Response): void => {
+app.post('/api/quickbookswebhook', (req, res) => {
+
+  const webhooksVerifier = 'cb5458d7-18fb-4e0a-9510-9aaa2692f414';
   console.log('quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook:', req);
+  const webhookPayload = JSON.stringify(req.body);
+  console.log('The paylopad is :' + JSON.stringify(req.body));
+  const signature = req.get('intuit-signature');
+
+  // if signature is empty return 401
+  if (!signature) {
+
+    console.log('FORBIDDEN, there is no signature in the quickbooks webhook');
+    return res.status(401).send('FORBIDDEN');
+  }
+
+  // if payload is empty, don't do anything
+  if (!webhookPayload) {
+    console.log('SUCCESS, quickbooks webhook is OK');
+    return res.status(200).send('success');
+  }
+
+  /**
+   * Validates the payload with the intuit-signature hash
+   */
+  const hash = crypto.createHmac('sha256', config.get('WEBHOOKSVERIFIER')).update(webhookPayload).digest('base64');
+  if (signature === hash) {
+      console.log("The Webhook notification payload is :" + webhookPayload);
+      return res.status(200).send('SUCCESS');
+  }
+  return res.status(401).send('FORBIDDEN');
 });
 
 

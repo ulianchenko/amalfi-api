@@ -1,4 +1,5 @@
 {
   "PORT": 8080,
-  "DOMAIN_NAME": "https://amalfi.onrender.com"
+  "DOMAIN_NAME": "https://amalfi.onrender.com",
+  "WEBHOOKSVERIFIER": "cb5458d7-18fb-4e0a-9510-9aaa2692f414"
 }

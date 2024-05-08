@@ -84,11 +84,11 @@ for local development:
 1) amalfi-api -> config -> default.json: "DOMAIN_NAME": "http://localhost:3000"
 2) amalfi-api -> index.js: app.get('/api/quickbooksredirect', (req: Request, res: Response): void => { ... res.redirect('http://localhost:3000/quickbooksredirect') });
 3) amalfi-api -> index.js: app.get('/api/quickbooks', (req: Request, res: Response): void => { ... res.redirect('http://localhost:3000/quickbooksredirect') });
-4) amalfi -> config.json: "apiEndPoint": "http://localhost:8080/api/"
+4) amalfi -> config.json: "apiEndPoint": "http://localhost:8080/api"
 
 for online (onrender.com) development:
 1) amalfi-api -> config -> default.json: "DOMAIN_NAME": "https://amalfi.onrender.com"
 2) amalfi-api -> index.js: app.get('/api/quickbooksredirect', (req: Request, res: Response): void => { ... res.redirect('https://amalfi.onrender.com/quickbooksredirect') });
 3) amalfi-api -> index.js: app.get('/api/quickbooks', (req: Request, res: Response): void => { ... res.redirect('https://amalfi.onrender.com/quickbooksredirect') });
-4) amalfi -> config.json: "apiEndPoint": "https://amalfi-api.onrender.com/api/"
+4) amalfi -> config.json: "apiEndPoint": "https://amalfi-api.onrender.com/api"
 
