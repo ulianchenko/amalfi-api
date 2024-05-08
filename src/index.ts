@@ -1,4 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
+// @ts-ignore
+import OAuthClient from 'intuit-oauth';
 // import axios from 'axios';
 import cors from 'cors';
 import config from 'config';
@@ -11,6 +13,7 @@ import dotenv from 'dotenv';
 import initDatabase from './db/initDatabase';
 // Routes
 import routes from './routes'
+import invoiceRequestBody from './db/mockData/invoice.json';
 // // Swagger
 // import swaggerSpec from './configs/swagerSpec'
 
@@ -94,6 +97,114 @@ app.use('/api', routes);
 //     console.log(error);
 //   });
 // });
+
+// Routes for quickbooks
+let oauthClient: any = null;
+let oauth2_token_json = null;
+let access_token = '';
+let companyId = '';
+
+app.get('/api/quickbooks', (req: Request, res: Response): void => {
+  oauthClient = new OAuthClient({
+    // clientId: 'AB8EtwqFitQeTQfQtXr9HbCQPoYf4GQAyuIu2fNr33W1FXERXG',
+    // clientSecret: 'trPqOVtMm6qpmezBCwxso6npJ947XRGgC5lMmQHg',
+    clientId: 'ABVwxZ39lXmAJdAlo4VwehobfXgAAJCsX9n68WlOpJUJMHrd7n',
+    clientSecret: 'mgkPADZz5LGpPgNiiq0VCyKFu5Hnw2xi2m5y70hu',
+    environment: 'sandbox',
+    // redirectUri: 'http://localhost:3000/quickbooksredirect',
+    redirectUri: 'http://localhost:8080/api/quickbooksredirect',
+  });
+  const authUri = oauthClient.authorizeUri({scope:[OAuthClient.scopes.Accounting],state:'testState'});
+
+  console.log(authUri);
+  res.send(authUri);
+});
+
+app.get('/api/quickbooksredirect', (req: Request, res: Response): void => {
+  console.log('code: ', req.query.code);
+  console.log('realmId: ', req.query.realmId);
+  console.log('url: ', req.url);
+
+  companyId = String(req.query.realmId);
+  const parseRedirect = req.url;
+  oauthClient.createToken(parseRedirect)
+    .then(function(authResponse: any) {
+
+      oauth2_token_json = JSON.stringify(authResponse.json, null, 2);
+      console.log(oauth2_token_json);
+      console.log('access_token: ', JSON.parse(oauth2_token_json).access_token);
+      access_token = JSON.parse(oauth2_token_json).access_token;
+      // console.log('The Token is  '+ JSON.stringify(authResponse.getJson()));
+    })
+    .catch(function(e: {originalMessage: string, intuit_tid: string}) {
+        console.error("The error message is :"+e.originalMessage);
+        console.error(e.intuit_tid);
+    });
+  // res.redirect('http://localhost:3000/quickbooksredirect');
+  res.redirect('https://amalfi.onrender.com/quickbooksredirect');
+});
+
+app.get('/api/getInvoiceInfo', function (req, res) {
+  // const companyID = oauthClient.getToken().realmId;
+  let invoiceBody = invoiceRequestBody;
+  if (companyId !== '9341452118612650') {
+    console.log('CANADIAN COMPANY CANADIAN COMPANY CANADIAN COMPANY ');
+    // @ts-ignore: error message
+    invoiceBody.Line[0].SalesItemLineDetail.TaxCodeRef = {
+      "name": "SomeTaxName",
+      "value": 6
+    };
+  }
+
+  const url =
+    oauthClient.environment == 'sandbox'
+      ? OAuthClient.environment.sandbox
+      : OAuthClient.environment.production;
+
+  oauthClient
+    .makeApiCall({
+      url: `https://sandbox-quickbooks.api.intuit.com/v3/company/${companyId}/invoice?minorversion=62&include=invoiceLink`,
+      // url: `${url}v3/company/${companyID}/invoice?minorversion=62&include=invoiceLink`,
+      // url: `${url}v3/company/${companyID}/invoice?minorversion=62`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify(invoiceRequestBody),
+      body: JSON.stringify(invoiceBody),
+    })
+    .then(function (authResponse: any) {
+      // console.log(`\n The response for API call is :${JSON.stringify(authResponse.json)}`);
+      console.log(authResponse);
+      res.send(authResponse.json);
+    })
+    .catch(function (e: any) {
+      console.error(e);
+    });
+});
+
+app.get('/api/getCompanyInfo', function (req, res) {
+  const companyID = oauthClient.getToken().realmId;
+
+  const url =
+    oauthClient.environment == 'sandbox'
+      ? OAuthClient.environment.sandbox
+      : OAuthClient.environment.production;
+
+  oauthClient
+    .makeApiCall({ url: `${url}v3/company/${companyID}/companyinfo/${companyID}` })
+    .then(function (authResponse: any) {
+      console.log(`\n The response for API call is :${JSON.stringify(authResponse.json)}`);
+      res.send(authResponse.json);
+    })
+    .catch(function (e: any) {
+      console.error(e);
+    });
+});
+
+app.get('/api/quickbookswebhook', (req: Request, res: Response): void => {
+  console.log('quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook quickbookswebhook:', req);
+});
 
 
 // Middleware for handling 404 error

@@ -1,4 +1,4 @@
 {
   "PORT": 8080,
-  "DOMAIN_NAME": "http://localhost:3000"
+  "DOMAIN_NAME": "https://amalfi.onrender.com/"
 }

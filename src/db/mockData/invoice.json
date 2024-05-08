@@ -1,0 +1,24 @@
+{
+  "Line": [
+    {
+      "DetailType": "SalesItemLineDetail",
+      "Amount": 33.0,
+      "SalesItemLineDetail": {
+        "ItemRef": {
+          "name": "Services",
+          "value": "1"
+        }
+      }
+    }
+  ],
+  "CustomerRef": {
+    "value": "1"
+  },
+  "AllowOnlineACHPayment": true,
+  "AllowOnlineCreditCardPayment": true,
+  "AllowOnlinePayment": true,
+  "BillEmail": {
+    "Address": "ulianchenko@gmail.com"
+  },
+  "EmailStatus": "NeedToSend"
+}

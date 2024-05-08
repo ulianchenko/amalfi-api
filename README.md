@@ -79,3 +79,8 @@ To run tests for this project, [Jest](https://jestjs.io/) is used. Follow the st
   - Coverage Report: Open the coverage report to visualize which parts of your code are covered by tests.
 
 Feel free to explore Jest's documentation for more advanced testing features: Jest Documentation.
+
+for local development:
+1) amalfi-api -> config -> default.json: "DOMAIN_NAME": "http://localhost:3000"
+2) amalfi-api -> index.js: app.get('/api/quickbooksredirect', (req: Request, res: Response): void => { ... res.redirect('http://localhost:3000/quickbooksredirect') });
+3) amalfi -> config.json: "apiEndPoint": "http://localhost:8080/api/"
