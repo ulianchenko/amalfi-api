@@ -15,10 +15,8 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   ];
 
 res.status(200).json({
-    response: {
-      text: `${messages[Math.floor(Math.random()*7)]}`
-    },
-  });
+  text: `${messages[Math.floor(Math.random()*7)]}`
+});
 });
 
 export default router;
